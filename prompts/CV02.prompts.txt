@@ -1,0 +1,18 @@
+K čemu slouží závislost Spring Boot DevTools?
+Jaká je její největší výhoda
+-- gemini.google.com
+
+Upravte endpoint /user aby přijal ID uživatele jako Query parameter (/user?id=1) a vrátí odpovídající instanci třídy User
+
+@GetMapping("/user")
+public User findUser() {
+return userService.findUser();
+}
+
+public User findUser() {
+User user = users.get(1L);
+
+log.atDebug().log("User found: {}", user);
+    return user;
+}
+-- Google AI Studio
