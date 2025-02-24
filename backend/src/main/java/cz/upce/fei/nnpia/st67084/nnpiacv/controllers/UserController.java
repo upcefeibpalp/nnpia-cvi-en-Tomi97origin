@@ -2,6 +2,7 @@ package cz.upce.fei.nnpia.st67084.nnpiacv.controllers;
 
 import cz.upce.fei.nnpia.st67084.nnpiacv.domain.User;
 import cz.upce.fei.nnpia.st67084.nnpiacv.services.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,18 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RestController
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public User findUser(@PathVariable Long id) {
         User user = userService.findUser(id);
         if (user == null) {
@@ -30,9 +27,8 @@ public class UserController {
         return user;
     }
 
-    @GetMapping("/user")
-    public Collection<User> findUsers() {
-        return userService.findUsers();
+    @GetMapping("/users")
+    public Collection<User> findUsers(@RequestParam(name = "email", required = false) String email) {
+        return userService.findUsers(email);
     }
-
 }

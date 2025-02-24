@@ -1,0 +1,77 @@
+run docker-compose.yml with docker desktop
+-gemini.google.com
+----------------------------------------------------------------------------------------
+Implementujte pomocí Query methods v UserRepository metodu pro:
+
+Získání uživatele podle hodnoty parametru email.
+
+Vybere z databáze záznam, kde email je roven hodnotě v parametru metody.
+
+Upravte v UserController endpoint pro získání všech uživatelů.
+
+Přidejte mu nepovinný Query parameter email.
+
+Pokud bude v parametru hodnota, vyberte uživatele s daným emailem.
+
+Přidejte potřebné metody do UserService.
+
+Chybové stavy zatím v tomto cvičení neošetřujte.
+
+
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+}
+
+
+
+@RestController
+
+public class UserController {
+
+
+
+    private final UserService userService;
+
+
+
+    public UserController(UserService userService) {
+
+        this.userService = userService;
+
+    }
+
+
+
+    @GetMapping("/user/{id}")
+
+    public User findUser(@PathVariable Long id) {
+
+        User user = userService.findUser(id);
+
+        if (user == null) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        }
+
+        return user;
+
+    }
+
+
+
+    @GetMapping("/user")
+
+    public Collection<User> findUsers() {
+
+        return userService.findUsers();
+
+    }
+
+}
+-gemini.google.com
+----------------------------------------------------------------------------------------
+
+ Upravte application.properties tak aby logovala SQL dotazy.
+-gemini.google.com
