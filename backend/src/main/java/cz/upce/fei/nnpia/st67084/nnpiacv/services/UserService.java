@@ -53,5 +53,36 @@ public class UserService {
         } else {
             return userRepository.findAll(); // Return all users if email is not provided
         }
+
+    }
+
+    public User createUser(User user) {
+        log.atDebug().log("Creating user: {}", user);
+        return userRepository.save(user);
+    }
+
+    public boolean deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            log.atDebug().log("User not found with id: {}", id);
+            return false; // Nebo můžeme vyhodit ResponseStatusException přímo zde
+        }
+        userRepository.deleteById(id);
+        log.atDebug().log("User with id: {} deleted", id);
+        return true;
+    }
+
+    public User updateUser(Long id, User updatedUser) {
+        Optional<User> existingUserOptional = userRepository.findById(id);
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            log.atDebug().log("Updating user with id {}: {}", id, updatedUser);
+            // Aktualizujeme pole existujícího uživatele s novými hodnotami
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPassword(updatedUser.getPassword()); // Měli byste zvážit hashování hesla před uložením
+            return userRepository.save(existingUser); // Uložíme aktualizovaného uživatele
+        } else {
+            log.atDebug().log("User not found with id: {}", id);
+            return null; // Nebo můžeme vyhodit ResponseStatusException přímo zde
+        }
     }
 }

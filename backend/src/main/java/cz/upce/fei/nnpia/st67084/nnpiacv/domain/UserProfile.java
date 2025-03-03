@@ -17,7 +17,7 @@ public class UserProfile {
 
     private String profilePictureUrl; // Example attribute not related to the relationship
 
-    @OneToOne(fetch = FetchType.LAZY) // Define OneToOne relationship with User
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE) // Define OneToOne relationship with User
     @JoinColumn(name = "user_id", referencedColumnName = "id") // Specify foreign key column
     private User user;
 }

@@ -18,14 +18,14 @@ import java.util.Optional;
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
-    private final UserProfileRepository userProfileRepository; // Inject UserProfileRepository
+    private final UserProfileRepository userProfileRepository;
 
     @Override
     public void run(String... args) {
         Optional<User> adminUser = userRepository.findByEmail("admin@example.com");
 
         if (adminUser.isEmpty()) {
-            adminUser = Optional.of(new User(null, "adminPassword", "admin@example.com"));
+            adminUser = Optional.of(new User("adminPassword", "admin@example.com"));
             userRepository.save(adminUser.get());
             log.info("Admin user created: {}", adminUser.get().getEmail());
         } else {
@@ -33,7 +33,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Check if admin user profile already exists (optional)
-        UserProfile adminProfile = userProfileRepository.findByUser_Id(adminUser.get().getId()); // Assuming you add this method to UserProfileRepository
+        UserProfile adminProfile = userProfileRepository.findByUser_Id(adminUser.get().getId());
 
         if (adminProfile == null) {
             UserProfile userProfile = new UserProfile(null, "https://example.com/admin-profile.jpg", adminUser.get()); // Create UserProfile and link to adminUser
