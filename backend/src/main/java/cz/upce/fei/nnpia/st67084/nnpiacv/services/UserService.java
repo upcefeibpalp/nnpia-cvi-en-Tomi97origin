@@ -1,6 +1,8 @@
 package cz.upce.fei.nnpia.st67084.nnpiacv.services;
 
 import cz.upce.fei.nnpia.st67084.nnpiacv.domain.User;
+import cz.upce.fei.nnpia.st67084.nnpiacv.exception.UserAlreadyExistsException;
+import cz.upce.fei.nnpia.st67084.nnpiacv.exception.UserNotFoundException;
 import cz.upce.fei.nnpia.st67084.nnpiacv.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +29,7 @@ public class UserService {
             return user;
         } else {
             log.atDebug().log("User not found with id: {}", id);
-            return null;
+            throw new UserNotFoundException("User not found with id: " + id);
         }
     }
 
@@ -58,13 +60,16 @@ public class UserService {
 
     public User createUser(User user) {
         log.atDebug().log("Creating user: {}", user);
+        if (findUserByEmail(user.getEmail()) != null) {
+            throw new UserAlreadyExistsException("User found with email " + user.getEmail());
+        }
         return userRepository.save(user);
     }
 
     public boolean deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             log.atDebug().log("User not found with id: {}", id);
-            return false; // Nebo můžeme vyhodit ResponseStatusException přímo zde
+            throw new UserNotFoundException("User not found with id:" +id);
         }
         userRepository.deleteById(id);
         log.atDebug().log("User with id: {} deleted", id);
@@ -82,7 +87,7 @@ public class UserService {
             return userRepository.save(existingUser); // Uložíme aktualizovaného uživatele
         } else {
             log.atDebug().log("User not found with id: {}", id);
-            return null; // Nebo můžeme vyhodit ResponseStatusException přímo zde
+            throw new UserNotFoundException("User not found with id: " +id);
         }
     }
 }

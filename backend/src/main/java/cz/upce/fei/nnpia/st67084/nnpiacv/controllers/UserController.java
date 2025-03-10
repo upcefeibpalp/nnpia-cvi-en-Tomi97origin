@@ -3,6 +3,8 @@ package cz.upce.fei.nnpia.st67084.nnpiacv.controllers;
 import cz.upce.fei.nnpia.st67084.nnpiacv.domain.User;
 import cz.upce.fei.nnpia.st67084.nnpiacv.dto.UserRequestDTO;
 import cz.upce.fei.nnpia.st67084.nnpiacv.dto.UserResponseDTO;
+import cz.upce.fei.nnpia.st67084.nnpiacv.exception.UserAlreadyExistsException;
+import cz.upce.fei.nnpia.st67084.nnpiacv.exception.UserNotFoundException;
 import cz.upce.fei.nnpia.st67084.nnpiacv.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,4 +71,17 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"); // 404 Not Found, pokud uživatel neexistuje
         }
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        log.warn("User already exists exception: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+        log.warn("User not found exception: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
 }

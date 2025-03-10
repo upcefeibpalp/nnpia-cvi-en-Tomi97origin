@@ -13,6 +13,6 @@ public class UserRequestDTO {
     private String password;
 
     public User toUser(){
-        return new User(email, password);
+        return new User(password,email);
     }
 }
